@@ -1,0 +1,6 @@
+framework module Pods_SlidingCardViewController {
+  umbrella header "Pods-SlidingCardViewController-umbrella.h"
+
+  export *
+  module * { export * }
+}
