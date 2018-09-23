@@ -13,10 +13,13 @@ open class SlidingCardViewController: UIViewController {
     public var property = SlidingCardProperty()
     
     private var slidingCardInteractionController: SlidingCardInteractionController?
-    private let containerView: UIView
+    private let contentView: UIView
+    private var roundedShadowLayer: CAShapeLayer!
+    private var containerView: UIView
     
     public required init(_ containerView: UIView) {
-        self.containerView = containerView
+        self.contentView = containerView
+        self.containerView = UIView(frame: containerView.frame)
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .custom
         modalPresentationCapturesStatusBarAppearance = true
@@ -33,6 +36,7 @@ open class SlidingCardViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        containerView.addSubview(contentView)
         view.addSubview(containerView)
         view.backgroundColor = .clear
         containerView.snp.makeConstraints{
@@ -42,7 +46,14 @@ open class SlidingCardViewController: UIViewController {
             make.centerX.equalTo(view.bounds.midX)
             make.width.equalToSuperview()
         }
-        property.frontViewHeight = containerView.bounds.height
+        contentView.snp.makeConstraints {
+            (make) in
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+        }
+        property.frontViewHeight = contentView.bounds.height
         modalPresentationStyle = .overCurrentContext
         slidingCardInteractionController = SlidingCardInteractionController(viewController: self, property: property)
     }
@@ -52,7 +63,12 @@ open class SlidingCardViewController: UIViewController {
         let path = UIBezierPath(roundedRect: containerView.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: property.frontViewCornerRadius, height: property.frontViewCornerRadius))
         let mask = CAShapeLayer()
         mask.path = path.cgPath
-        containerView.layer.mask = mask
+        containerView.layer.shadowPath = path.cgPath
+        containerView.layer.shadowOpacity = property.frontViewShadowOpacity
+        containerView.layer.shadowColor = property.frontViewShadowColor.cgColor
+        containerView.layer.shadowOffset = property.frontViewShadowOffset
+        contentView.layer.mask = mask
+        contentView.layer.masksToBounds = true
     }
     
     override open var preferredStatusBarStyle: UIStatusBarStyle {
