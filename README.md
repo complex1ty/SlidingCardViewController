@@ -7,8 +7,10 @@ SlidingCardViewController is a customizable view controller to present a animati
 ## Installation
 
 ### CocoaPods
-// todo
-
+Add the following line into your app's pod file and run pod install:
+```perl
+pod 'SlidingCardViewController', :git => 'https://github.com/complex1ty/SlidingCardViewController.git'
+```
 
 ## Usage
 
